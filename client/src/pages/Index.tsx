@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { WelcomeScreen } from "@/components/WelcomeScreen";
-import { LessonInterface } from "@/components/LessonInterface";
-import { apiService } from "@/services/api";
-import { Lesson } from "@/types/lesson";
+import { useState, useEffect } from 'react';
+import { WelcomeScreen } from '@/components/WelcomeScreen';
+import { LessonInterface } from '@/components/LessonInterface';
+import { apiService } from '@/services/api';
+import { Lesson } from '@/types/lesson';
 
 const Index = () => {
   const [isLessonStarted, setIsLessonStarted] = useState(false);
@@ -55,8 +55,8 @@ const Index = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 text-lg mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="bg-primary text-primary-foreground px-4 py-2 rounded"
           >
             נסה שוב
@@ -77,20 +77,10 @@ const Index = () => {
   }
 
   if (isLessonStarted) {
-    return (
-      <LessonInterface 
-        lesson={lesson} 
-        onEndLesson={handleEndLesson}
-      />
-    );
+    return <LessonInterface lesson={lesson} onEndLesson={handleEndLesson} />;
   }
 
-  return (
-    <WelcomeScreen 
-      lesson={lesson}
-      onStartLesson={handleStartLesson}
-    />
-  );
+  return <WelcomeScreen lesson={lesson} onStartLesson={handleStartLesson} />;
 };
 
 export default Index;
