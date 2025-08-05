@@ -21,9 +21,11 @@ An advanced educational platform that combines AI with interactive learning for 
 - **Axios** - HTTP client
 
 ### **Backend (Server)**
-- **Node.js** + **Express**
+- **Node.js** + **TypeScript**
+
 - **MongoDB** + **Mongoose** - Database
-- **CORS** - Cross-origin requests
+- **CORS** - Helmet, Morgan - Essential middleware
+
 - **REST API** - Communication
 
 ### **Database**
@@ -34,43 +36,49 @@ An advanced educational platform that combines AI with interactive learning for 
 
 ```
 ignite-curiosity-ai/
-├── client/                 # Frontend Application
-│   ├── src/
-│   │   ├── components/     # React Components
-│   │   │   ├── ui/        # shadcn/ui components
-│   │   │   ├── LessonInterface.tsx
-│   │   │   ├── WelcomeScreen.tsx
-│   │   │   ├── ParticipantList.tsx
-│   │   │   └── ChatMessage.tsx
-│   │   ├── pages/         # Page Components
-│   │   │   ├── Index.tsx
-│   │   │   └── NotFound.tsx
-│   │   ├── services/      # API Services
-│   │   │   └── api.ts
-│   │   ├── types/         # TypeScript Types
-│   │   │   └── lesson.ts
-│   │   ├── hooks/         # Custom Hooks
-│   │   │   ├── use-mobile.tsx
-│   │   │   └── use-toast.ts
-│   │   ├── lib/           # Utilities
-│   │   │   └── utils.ts
-│   │   ├── App.tsx        # Main App Component
-│   │   ├── main.tsx       # Entry Point
-│   │   └── index.css      # Global Styles
-│   ├── public/            # Static Assets
-│   ├── package.json       # Dependencies
-│   ├── tailwind.config.ts # Tailwind Configuration
-│   └── vite.config.ts     # Vite Configuration
-├── server/                # Backend Application
-│   ├── models/            # MongoDB Models
-│   │   ├── Lesson.js
-│   │   ├── Child.js
-│   │   └── Message.js
-│   ├── routes/            # API Routes
-│   │   └── api.js
-│   ├── index.js           # Server Entry Point
-│   ├── seed.js            # Database Seeding
-│   └── package.json       # Dependencies
+├── client/                 # Frontend Application
+│   ├── src/
+│   │   ├── components/     # React Components
+│   │   │   ├── ui/        # shadcn/ui components
+│   │   │   ├── LessonInterface.tsx
+│   │   │   ├── WelcomeScreen.tsx
+│   │   │   ├── ParticipantList.tsx
+│   │   │   └── ChatMessage.tsx
+│   │   ├── pages/         # Page Components
+│   │   │   ├── Index.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── services/      # API Services
+│   │   │   └── api.ts
+│   │   ├── types/         # TypeScript Types
+│   │   │   └── lesson.ts
+│   │   ├── hooks/         # Custom Hooks
+│   │   │   ├── use-mobile.tsx
+│   │   │   └── use-toast.ts
+│   │   ├── lib/           # Utilities
+│   │   │   └── utils.ts
+│   │   ├── App.tsx        # Main App Component
+│   │   ├── main.tsx       # Entry Point
+│   │   └── index.css      # Global Styles
+│   ├── public/            # Static Assets
+│   ├── package.json       # Dependencies
+│   ├── tailwind.config.ts # Tailwind Configuration
+│   └── vite.config.ts     # Vite Configuration
+├── server/                # Backend Application
+│   ├── src/               # TypeScript Source Code
+│   │   ├── models/        # Mongoose Models (.ts files)
+│   │   │   ├── AIText.ts
+│   │   │   ├── Child.ts
+│   │   │   ├── Lesson.ts
+│   │   │   └── Message.ts
+│   │   ├── routes/        # API Routes (.ts files)
+│   │   │   └── api.ts
+│   │   └── index.ts       # Server Entry Point
+│   ├── dist/              # Compiled JavaScript Output
+│   ├── node_modules/      # Node.js Packages
+│   ├── package.json       # Dependencies
+│   ├── tsconfig.json      # TypeScript Configuration
+│   ├── .env               # Environment Variables (local)
+│   └── .env.example       # Environment Variables (example)
 └── README.md              # This File
 ```
 
@@ -109,27 +117,30 @@ npm install
    - Create a cluster in Atlas
    - Copy the connection string
 
-### **Step 4: Seed Initial Data**
+Step 4: Set Up Environment Variables
+Navigate to the server directory and create a file named .env. Copy the content from .env.example into this new .env file. Fill in the appropriate values for your environment.
+
+### **Step 5: Seed Initial Data**
 ```bash
 cd server
 node seed.js
 ```
 
-### **Step 5: Run the Server**
+### **Step 6: Run the Server**
 ```bash
 # Terminal 1
 cd server
-npx nodemon index.js
+npm run dev
 ```
 
-### **Step 6: Run the Client**
+### **Step 7: Run the Client**
 ```bash
 # Terminal 2
 cd client
 npm run dev
 ```
 
-### **Step 7: Access the System**
+### **Step 8: Access the System**
 - **Client**: http://localhost:8080 (or the displayed port)
 - **Server API**: http://localhost:4000
 
@@ -145,6 +156,17 @@ npm run dev
 ### **Messages**
 - `GET /api/messages/:lessonId` - Get messages for a lesson
 - `POST /api/messages` - Add new message
+
+### **AI Texts**
+- `GET /api/ai-texts` - Retrieve AI texts based on type/context
+
+- `GET /api/ai-texts/random/:type` - Retrieve a random AI text of a specific type
+
+- `POST /api/ai-texts` - Create a new AI text
+
+- `PUT /api/ai-texts/:id` - Update an AI text
+
+- `DELETE /api/ai-texts/:id` - Delete an AI text
 
 ### **Health Check**
 - `GET /api/health` - Server health check
@@ -179,19 +201,23 @@ npm run preview      # Preview production build
 npm run lint         # Check code quality
 ```
 
-**Server:**
-```bash
-npx nodemon index.js # Run server with auto-reload
-node seed.js         # Seed initial data
+Server:
+
+npm run dev          # Run server with auto-reload (TypeScript source)
+npm run build        # Compile TypeScript to JavaScript
+npm run start        # Run compiled server (for production)
+node seed.js         # Seed initial data
 ```
 
 ### **Environment Variables**
 
 **Server (.env):**
 ```env
-MONGO_URL=mongodb://localhost:27017/ignite-curiosity
 PORT=4000
+MONGODB_URI=mongodb://localhost:27017/ignite-curiosity
+ALLOWED_ORIGINS=http://localhost:8080,http://localhost:3000,http://localhost:5173
 ```
+
 
 ## 🤝 **Contributing**
 
