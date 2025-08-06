@@ -46,7 +46,12 @@ export interface Message {
 
 export interface AIText {
   id: string;
-  type: 'greeting' | 'ai_response' | 'system_message' | 'encouragement' | 'transition';
+  type:
+    | 'greeting'
+    | 'ai_response'
+    | 'system_message'
+    | 'encouragement'
+    | 'transition';
   content: string;
   context: string;
   order: number;
@@ -69,11 +74,13 @@ export const apiService = {
     const response = await api.get('/lessons');
     return response.data.map((lesson: any) => ({
       ...convertMongoId(lesson),
-      participants: lesson.participants.map((child: any) => convertMongoId(child)),
+      participants: lesson.participants.map((child: any) =>
+        convertMongoId(child)
+      ),
       steps: lesson.steps.map((step: any, index: number) => ({
         ...convertMongoId(step),
-        id: step._id || `step-${index}`
-      }))
+        id: step._id || `step-${index}`,
+      })),
     }));
   },
 
@@ -83,11 +90,13 @@ export const apiService = {
     const lesson = response.data;
     return {
       ...convertMongoId(lesson),
-      participants: lesson.participants.map((child: any) => convertMongoId(child)),
+      participants: lesson.participants.map((child: any) =>
+        convertMongoId(child)
+      ),
       steps: lesson.steps.map((step: any, index: number) => ({
         ...convertMongoId(step),
-        id: step._id || `step-${index}`
-      }))
+        id: step._id || `step-${index}`,
+      })),
     };
   },
 
@@ -104,7 +113,9 @@ export const apiService = {
   },
 
   // הוספת הודעה חדשה
-  async addMessage(message: Omit<Message, 'id' | 'timestamp'>): Promise<Message> {
+  async addMessage(
+    message: Omit<Message, 'id' | 'timestamp'>
+  ): Promise<Message> {
     const response = await api.post('/messages', message);
     return convertMongoId(response.data);
   },
@@ -114,7 +125,7 @@ export const apiService = {
     const params = new URLSearchParams();
     if (type) params.append('type', type);
     if (context) params.append('context', context);
-    
+
     const response = await api.get(`/ai-texts?${params.toString()}`);
     return response.data.map((text: any) => convertMongoId(text));
   },
@@ -141,4 +152,4 @@ export const apiService = {
   async deleteAIText(id: string): Promise<void> {
     await api.delete(`/ai-texts/${id}`);
   },
-}; 
+};

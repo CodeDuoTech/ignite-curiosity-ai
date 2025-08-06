@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "688b2e148f03c201fb4ddddf"
+  },
+  "title": "lesson 2",
+  "subject": "vacation",
+  "participants": {
+    "$oid": "688b2fa68f03c201fb4ddde5"
+  }
+}]
